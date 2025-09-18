@@ -2,13 +2,20 @@
 
 function animateValue(id, start, end, duration) {
   const obj = document.getElementById(id);
+  if (!obj) return;
   const range = end - start;
-  const stepTime = Math.abs(Math.floor(duration / range));
+  if (range === 0 || duration <= 0) {
+    obj.textContent = end + "+";
+    return;
+  }
+  const stepTime = Math.max(1, Math.floor(Math.abs(duration) / Math.abs(range)));
+  const step = range > 0 ? 1 : -1;
   let current = start;
   const timer = setInterval(() => {
-    current++;
+    current += step;
     obj.textContent = current + "+";
-    if (current >= end) {
+    const reachedEnd = step > 0 ? current >= end : current <= end;
+    if (reachedEnd) {
       clearInterval(timer);
       obj.textContent = end + "+";
     }
@@ -16,15 +23,21 @@ function animateValue(id, start, end, duration) {
 }
 
 function setupUIInteractions() {
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  const searchClose = document.getElementById('searchClose');
+  const searchGo = document.getElementById('searchGo');
+  const sideMenu = document.getElementById('sideMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+  const menuClose = document.getElementById('menuClose');
+  const isFirsatiBtn = document.getElementById('isFirsatiBtn');
+  const urunlerBtn = document.getElementById('urunlerBtn');
+
+  const hasSearch = searchModal && searchInput && searchClose && searchGo;
+  const hasMenu = sideMenu && menuBackdrop && menuClose;
+
   // Arama modalı
-  document.querySelectorAll('button span.material-icons').forEach(icon => {
-    if (icon.textContent === 'search') {
-      icon.parentElement.addEventListener('click', () => {
-        document.getElementById('searchModal').classList.remove('hidden');
-        document.getElementById('searchInput').focus();
-      });
-    }
-  });
+  
 
   document.getElementById('searchClose').onclick = () => {
     document.getElementById('searchModal').classList.add('hidden');
