@@ -147,7 +147,7 @@ const productData = {
   },
   "EXCELLIUM 90": {
     desc:"Ganoderma Lucidum bitkisini, Gano Excel olarak kontrollü koşullarda ve GMP standartlarında kendi çiftliklerimizde yetiştirip, her 90 günde bir hasat etmekteyiz.Fakat EXCELLIUM ürünümüzü 90 günlük hasat süresi dolmadan 20. gününde topladığımız sporların yoğun olduğu dönemde toplanan, Ganoderma'lardan üretmekteyiz. Çünkü, bu dönemde toplanan Ganoderma'ların sporlarında yoğun miktarda organik germanyum bulunmaktadır. Bu özel ürünle tanışınca çok seveceksiniz.",    
-    img: "https://www.ganoexcel.com.tr/assets/images/urunler/supplements-products/GANOCORDY.jpg",
+    img: "https://www.ganoexcel.com.tr/assets/images/urunler/supplements-products/EXCELLIUM.jpg",
     tip: "Takviye Edici Gıda",
     kod: "E8",
     adet: "90 Kapsül",
