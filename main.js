@@ -30,70 +30,98 @@ function setupUIInteractions() {
   const sideMenu = document.getElementById('sideMenu');
   const menuBackdrop = document.getElementById('menuBackdrop');
   const menuClose = document.getElementById('menuClose');
-  const isFirsatiBtn = document.getElementById('isFirsatiBtn');
-  const urunlerBtn = document.getElementById('urunlerBtn');
 
-  const hasSearch = searchModal && searchInput && searchClose && searchGo;
-  const hasMenu = sideMenu && menuBackdrop && menuClose;
+  const navIcons = Array.from(document.querySelectorAll('button span.material-icons'));
 
-  // Arama modalı
-  
-
-  document.getElementById('searchClose').onclick = () => {
-    document.getElementById('searchModal').classList.add('hidden');
-    document.getElementById('searchInput').value = '';
+  const closeSearch = () => {
+    if (!searchModal || !searchInput) return;
+    searchModal.classList.add('hidden');
+    searchInput.value = '';
   };
 
-  document.getElementById('searchGo').onclick = () => {
-    const query = document.getElementById('searchInput').value.trim();
-    if (!query) return;
-    const lcQuery = query.toLowerCase();
-    let url = '';
+  const openSearch = () => {
+    if (!searchModal || !searchInput) return;
+    searchModal.classList.remove('hidden');
+    requestAnimationFrame(() => searchInput.focus());
+  };
 
-    if (lcQuery.includes('iş') || lcQuery.includes('fırsat')) url = 'isfirsati.html';
-    else if (lcQuery.includes('ürün')) url = 'urunler.html';
-    else if (lcQuery.includes('kayıt')) url = 'kayitsayfasi.html';
-    else if (lcQuery.includes('hakkımızda') || lcQuery.includes('şirket')) url = 'sirket.html';
-    else if (lcQuery.includes('ana') || lcQuery.includes('home')) url = 'index.html';
-    else {
-      alert('Aradığınız sayfa bulunamadı.');
+  if (searchClose) {
+    searchClose.addEventListener('click', closeSearch);
+  }
+
+  if (searchGo && searchInput) {
+    const handleSearch = () => {
+      const query = searchInput.value.trim();
+      if (!query) return;
+      const lcQuery = query.toLowerCase();
+      let url = '';
+
+      if (lcQuery.includes('iş') || lcQuery.includes('fırsat')) url = 'isfirsati.html';
+      else if (lcQuery.includes('ürün')) url = 'urunler.html';
+      else if (lcQuery.includes('kayıt')) url = 'kayitsayfasi.html';
+      else if (lcQuery.includes('hakkımızda') || lcQuery.includes('şirket')) url = 'sirket.html';
+      else if (lcQuery.includes('ana') || lcQuery.includes('home')) url = 'index.html';
+      else {
+        alert('Aradığınız sayfa bulunamadı.');
+      }
+
+      if (url) {
+        window.location.href = url;
+        closeSearch();
+      }
+    };
+
+    searchGo.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSearch();
+      }
+    });
+  }
+
+  if (navIcons.length) {
+    navIcons.forEach(icon => {
+      const iconName = icon.textContent.trim();
+      const parentButton = icon.parentElement;
+
+      if (iconName === 'search' && parentButton) {
+        parentButton.addEventListener('click', openSearch);
+      }
+
+      if (iconName === 'menu' && parentButton && sideMenu && menuBackdrop) {
+        parentButton.addEventListener('click', () => {
+          sideMenu.classList.remove('-translate-x-full');
+          menuBackdrop.classList.remove('hidden');
+        });
+      }
+    });
+  }
+
+  const closeSideMenu = () => {
+    if (sideMenu) {
+      sideMenu.classList.add('-translate-x-full');
     }
-
-    if (url) {
-      window.location.href = url;
-      document.getElementById('searchModal').classList.add('hidden');
-      document.getElementById('searchInput').value = '';
+    if (menuBackdrop) {
+      menuBackdrop.classList.add('hidden');
     }
   };
+
+  if (menuClose) {
+    menuClose.addEventListener('click', closeSideMenu);
+  }
+  if (menuBackdrop) {
+    menuBackdrop.addEventListener('click', closeSideMenu);
+  }
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-      document.getElementById('searchModal').classList.add('hidden');
-      document.getElementById('searchInput').value = '';
-      document.getElementById('sideMenu').classList.add('-translate-x-full');
-      document.getElementById('menuBackdrop').classList.add('hidden');
+      closeSearch();
+      closeSideMenu();
     }
   });
 
-  document.querySelectorAll('button span.material-icons').forEach(icon => {
-    if (icon.textContent === 'menu') {
-      icon.parentElement.addEventListener('click', () => {
-        document.getElementById('sideMenu').classList.remove('-translate-x-full');
-        document.getElementById('menuBackdrop').classList.remove('hidden');
-      });
-    }
-  });
-
-  document.getElementById('menuClose').onclick = closeSideMenu;
-  document.getElementById('menuBackdrop').onclick = closeSideMenu;
-
-  function closeSideMenu() {
-    document.getElementById('sideMenu').classList.add('-translate-x-full');
-    document.getElementById('menuBackdrop').classList.add('hidden');
-  }
-
-  function animateAndRedirect(btnId, url) {
-    const btn = document.getElementById(btnId);
+  function animateAndRedirect(btn, url) {
     if (!btn) return;
     btn.classList.add('scale-110', 'bg-green-100');
     setTimeout(() => {
@@ -103,18 +131,18 @@ function setupUIInteractions() {
   }
 
   const isBtn = document.getElementById('isFirsatiBtn');
-  const urunBtn = document.getElementById('urunlerBtn');
   if (isBtn) {
     isBtn.addEventListener('click', e => {
       e.preventDefault();
-      animateAndRedirect('isFirsatiBtn', 'isfirsati.html');
+      animateAndRedirect(isBtn, 'isfirsati.html');
     });
   }
 
+  const urunBtn = document.getElementById('urunlerBtn');
   if (urunBtn) {
     urunBtn.addEventListener('click', e => {
       e.preventDefault();
-      animateAndRedirect('urunlerBtn', 'urunler.html');
+      animateAndRedirect(urunBtn, 'urunler.html');
     });
   }
 }
